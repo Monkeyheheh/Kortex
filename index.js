@@ -424,6 +424,20 @@ app.post('/api/chats/:chatId/messages', authMiddleware, rateLimit(RATE.messages.
   res.status(201).json(message);
 });
 
+// ─── Contact accept helper ────────────────────────────────────────────────────
+
+function acceptContactRequest(request) {
+  request.status     = 'accepted';
+  request.resolvedAt = Date.now();
+  const requestId    = request.id;
+  const direct = findOrCreateDirectChat(request.from, request.to);
+  pushToInbox(request.to,   systemMessage(`You accepted ${request.from}'s contact request. A chat has been created.`, { type: 'contact_accepted', requestId }));
+  pushToInbox(request.from, systemMessage(`${request.to} accepted your contact request. You can now chat.`,           { type: 'contact_accepted', requestId }));
+  saveDataDebounced();
+  io.emit('chat_created', { chat: direct });
+  return direct;
+}
+
 // ─── Contact requests ─────────────────────────────────────────────────────────
 
 // Get all contact requests involving the current user
