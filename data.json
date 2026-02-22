@@ -1,0 +1,24 @@
+{
+  "users": [
+    {
+      "id": "user-39abde03-2f08-4fbd-bd51-e17f6802bfc9",
+      "username": "Kortex",
+      "passwordHash": "$2b$12$6i1DukVLHqEEeXcPiTGTzOKu1RfjfE1MkMHBDLIHjXh/cqj0jBA3C",
+      "contactNumber": "C-404240",
+      "createdAt": 1771781365600,
+      "lastSeen": 1771781440173
+    }
+  ],
+  "chats": [
+    {
+      "id": "inbox-Kortex",
+      "type": "inbox",
+      "participants": [
+        "Kortex"
+      ],
+      "messages": [],
+      "updatedAt": 1771781365601
+    }
+  ],
+  "contactRequests": []
+}

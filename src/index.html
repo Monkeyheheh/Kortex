@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Kortex-like Chat</title>
+
+  <!-- Detect /proxy/<token>[/<token>] prefix at runtime so all assets resolve
+       correctly whether accessed directly or through a reverse proxy. -->
+  <script>
+    (function () {
+      var m = window.location.pathname.match(/^(\/proxy\/[^/?#]+(?:\/[^/?#]+)?)/);
+      window.__BASE = m ? m[1] : '';
+      // Inject <base> so relative URLs in CSS, images etc. all resolve correctly
+      var base = document.createElement('base');
+      base.href = window.__BASE + '/';
+      document.head.appendChild(base);
+    })();
+  </script>
+
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <div id="app" class="dark">
+    <aside id="sidebar" class="sidebar">
+      <header class="brand">
+        <div class="logo">KX</div>
+        <div class="title">Kortex Chat</div>
+      </header>
+
+      <nav class="tabs">
+        <button data-tab="chats" class="tab active">Chats</button>
+        <button data-tab="inbox" class="tab">Inbox</button>
+        <button data-tab="contacts" class="tab">Contacts</button>
+        <button data-tab="settings" class="tab">Settings</button>
+      </nav>
+
+      <div class="tab-panels">
+        <section id="panel-chats" class="panel active">
+          <div class="search">
+            <input id="searchChats" class="input" placeholder="Search chats..." />
+          </div>
+          <ul id="chatList" class="list"></ul>
+          <p class="muted small" style="margin-top:12px;">Contact the owner: C-404240</p>
+        </section>
+
+        <section id="panel-inbox" class="panel">
+          <div class="search">
+            <input id="searchInbox" class="input" placeholder="Search inbox..." />
+          </div>
+          <ul id="inboxList" class="list"></ul>
+        </section>
+
+        <section id="panel-contacts" class="panel">
+          <!-- Search all users -->
+          <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;">
+            <input id="searchContacts" class="input" placeholder="Search by username or C-######" />
+            <button id="searchContactsBtn" class="btn primary">Search</button>
+          </div>
+          <ul id="searchResults" class="list" style="margin-bottom:12px;"></ul>
+
+          <!-- Send request by exact username/number -->
+          <div style="border-top:1px solid rgba(255,255,255,0.05);padding-top:10px;margin-top:4px;">
+            <div class="muted small" style="margin-bottom:6px;font-family:var(--mono);letter-spacing:.04em;">YOUR CONTACTS</div>
+            <ul id="contactList" class="list"></ul>
+          </div>
+
+          <div id="requestStatus" class="muted small" style="padding-left:6px;margin-top:6px;"></div>
+          <!-- hidden input kept for JS compatibility -->
+          <input id="contactUsername" style="display:none;" />
+          <button id="sendRequestBtn" style="display:none;"></button>
+        </section>
+
+        <section id="panel-settings" class="panel">
+          <div class="settings">
+            <div class="me-card" style="display:flex;align-items:center;gap:10px;">
+              <div id="meAvatar" class="avatar small">--</div>
+              <div>
+                <div id="meName" class="bold">Not signed in</div>
+                <div id="meContact" class="small muted">Contact: -</div>
+              </div>
+            </div>
+
+            <div style="margin-top:12px;display:flex;gap:8px;align-items:center;">
+              <button id="copyContactBtn" class="btn">Copy my contact</button>
+              <button id="logoutBtn" class="btn ghost">Logout</button>
+            </div>
+
+            <p class="muted small" style="margin-top:12px;">Dark theme, minimal auth. Use contact numbers to add others.</p>
+          </div>
+        </section>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="topbar">
+        <div id="currentChatTitle">Welcome</div>
+        <div class="spacer"></div>
+        <div id="userStatus" class="muted small"></div>
+      </div>
+
+      <div id="chatArea" class="chat-area">
+        <div id="messages" class="messages empty">
+          <div class="placeholder">Select a chat to start messaging.</div>
+        </div>
+
+        <form id="messageForm" class="composer" style="display:none;">
+          <input id="messageInput" class="input" placeholder="Type a message..." autocomplete="off" />
+          <button type="submit" class="btn primary send-btn">Send</button>
+        </form>
+      </div>
+    </main>
+
+    <!-- Authentication modal -->
+    <div id="authModal" class="modal" style="display:none;">
+      <div class="modal-inner">
+        <h2 id="authTitle">Sign in</h2>
+        <form id="authForm">
+          <input id="authUsername" class="input" placeholder="Username (no email)" required />
+          <input id="authPassword" class="input" type="password" placeholder="Password" required />
+          <div class="row" style="margin-top:8px;">
+            <button id="authSubmit" type="submit" class="btn primary">Sign in</button>
+            <button id="toggleAuthMode" type="button" class="btn ghost">Create account</button>
+          </div>
+        </form>
+        <div id="authError" class="error" style="margin-top:8px;"></div>
+        <div class="muted small" style="margin-top:12px;">
+          When you register you'll receive a contact number (e.g. C-123456) to share with others.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Load Socket.IO from the correct path, then app.js -->
+  <script src="socket.io/socket.io.js"></script>
+  <script>
+    // Make the detected base available to app.js before it loads
+    window.__BASE = window.__BASE || '';
+  </script>
+  <script src="js/app.js"></script>
+</body>
+</html>

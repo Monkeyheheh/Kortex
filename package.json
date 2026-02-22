@@ -1,0 +1,16 @@
+{
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "fs": "^0.0.1-security",
+    "http": "^0.0.1-security",
+    "jsonwebtoken": "^9.0.3",
+    "path": "^0.12.7",
+    "socket": "^1.1.63",
+    "socket.io": "^4.8.3",
+    "uuid": "^13.0.0",
+    "websocket": "^1.0.35"
+  }
+}
